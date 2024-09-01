@@ -1,7 +1,8 @@
 #!/bin/sh
 
+PID=$$
 spin() {
-    while : ; do for X in '⠟' '⠯' '⠷' '⠾' '⠽' '⠻' ; do printf "\b$X" ; sleep 0.1 ; done ; done
+    while ps -p $PID > /dev/null; do for X in '⠟' '⠯' '⠷' '⠾' '⠽' '⠻' ; do printf "\b$X" ; sleep 0.1 ; done ; done
 }
 
 if [ "$(id -u)" -eq 0 ]; then
@@ -51,15 +52,17 @@ if [[ "$TARGET" == "linux" ]]; then
     mkdir -p "$DIR_CLAP"
     mkdir -p "$DIR_VST3"
 
-    curl -sfSL -m 20 -o "$DIR_CLAP/$PLUGIN_FILE.clap" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.clap"
+    curl -sfL -m 20 -o "$DIR_CLAP/$PLUGIN_FILE.clap" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.clap"
     if [ $? -ne 0 ]; then
+        kill $SPINNER >/dev/null 2>&1
         printf "\nCan't download the plugin :c"
         printf "\nPlease check your connectivity and try again\n"
         exit 1
     fi
     
-    curl -sfSL -m 20 -o "$DIR_VST3/$PLUGIN_FILE.vst3.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.vst3.zip"
+    curl -sfL -m 20 -o "$DIR_VST3/$PLUGIN_FILE.vst3.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.vst3.zip"
     if [ $? -ne 0 ]; then
+        kill $SPINNER >/dev/null 2>&1
         printf "\nCan't download the plugin :c"
         printf "\nPlease check your connectivity and try again\n"
         exit 1
@@ -78,15 +81,17 @@ elif [[ "$TARGET" == "macos" ]]; then
     mkdir -p "$DIR_CLAP"
     mkdir -p "$DIR_VST3"
 
-    curl -sfSL -m 20 -o "$DIR_CLAP/$PLUGIN_FILE.clap.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.clap.zip"
+    curl -sfL -m 20 -o "$DIR_CLAP/$PLUGIN_FILE.clap.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.clap.zip"
     if [ $? -ne 0 ]; then
+        kill $SPINNER >/dev/null 2>&1
         printf "\nCan't download the plugin :c"
         printf "\nPlease check your connectivity and try again\n"
         exit 1
     fi
     
-    curl -sfSL -m 20 -o "$DIR_VST3/$PLUGIN_FILE.vst3.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.vst3.zip"
+    curl -sfL -m 20 -o "$DIR_VST3/$PLUGIN_FILE.vst3.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.vst3.zip"
     if [ $? -ne 0 ]; then
+        kill $SPINNER >/dev/null 2>&1
         printf "\nCan't download the plugin :c"
         printf "\nPlease check your connectivity and try again\n"
         exit 1
