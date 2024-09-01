@@ -1,11 +1,11 @@
 #!/bin/sh
 
 spin() {
-    while : ; do for X in '⠟' '⠯' '⠷' '⠾' '⠽' '⠻' ; do echo -en "\b$X" ; sleep 0.1 ; done ; done
+    while : ; do for X in '⠟' '⠯' '⠷' '⠾' '⠽' '⠻' ; do printf "\b$X" ; sleep 0.1 ; done ; done
 }
 
 if [ "$(id -u)" -eq 0 ]; then
-    echo "Please don't run me as root :c"
+    printf "Please don't run me as root :c\n"
     exit 1
 fi
 
@@ -35,11 +35,11 @@ elif [[ "$OS" == *"Darwin"* ]]; then
 fi
 
 if [ "$PLUGIN" == "" ]; then
-    echo "No arguments specified :c"
+    printf "No arguments specified :c\n"
     exit 1
 fi
 
-echo -n "Installing $PLUGIN  "
+printf "Installing $PLUGIN  "
 spin&
 SPINNER=$!
 
@@ -82,11 +82,9 @@ elif [[ "$TARGET" == "macos" ]]; then
     rm -f "$DIR_VST3/$PLUGIN_FILE.vst3.zip"
     rmdir "$DIR_VST3/$PLUGIN_FILE.vst3.temp"
 else
-    echo ""
-    echo "Unknown OS, this installer only supports Linux and MacOS PCs :c"
+    printf "\nUnknown OS, this installer only supports Linux and MacOS PCs :c\n"
     exit 1
 fi
 
 kill $SPINNER >/dev/null 2>&1
-echo ""
-echo "Done! Thank you for using my plugins <3"
+printf "\nDone! Thank you for using my plugins <3\n"
