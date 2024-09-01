@@ -80,9 +80,11 @@ elif [[ "$TARGET" == "macos" ]]; then
     rm -f "$DIR_VST3/$PLUGIN.vst3.zip"
     rmdir "$DIR_VST3/$PLUGIN.vst3.temp"
 else
+    echo ""
     echo "Unknown OS, this installer only supports Linux and MacOS PCs :c"
     exit 1
 fi
 
 kill $SPINNER >/dev/null 2>&1
+echo ""
 echo "Done! Thank you for using my plugins <3"
