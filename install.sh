@@ -51,8 +51,19 @@ if [[ "$TARGET" == "linux" ]]; then
     mkdir -p "$DIR_CLAP"
     mkdir -p "$DIR_VST3"
 
-    curl -sSL -o "$DIR_CLAP/$PLUGIN_FILE.clap" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.clap"
-    curl -sSL -o "$DIR_VST3/$PLUGIN_FILE.vst3.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.vst3.zip"
+    curl -sfSL -m 20 -o "$DIR_CLAP/$PLUGIN_FILE.clap" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.clap"
+    if [ $? -ne 0 ]; then
+        printf "\nCan't download the plugin :c"
+        printf "\nPlease check your connectivity and try again\n"
+        exit 1
+    fi
+    
+    curl -sfSL -m 20 -o "$DIR_VST3/$PLUGIN_FILE.vst3.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.vst3.zip"
+    if [ $? -ne 0 ]; then
+        printf "\nCan't download the plugin :c"
+        printf "\nPlease check your connectivity and try again\n"
+        exit 1
+    fi
 
     unzip -oqq -d "$DIR_VST3/$PLUGIN_FILE.vst3.temp" "$DIR_VST3/$PLUGIN_FILE.vst3.zip"
     rm -rf "$DIR_VST3/$PLUGIN_FILE.vst3"
@@ -67,8 +78,19 @@ elif [[ "$TARGET" == "macos" ]]; then
     mkdir -p "$DIR_CLAP"
     mkdir -p "$DIR_VST3"
 
-    curl -sSL -o "$DIR_CLAP/$PLUGIN_FILE.clap.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.clap.zip"
-    curl -sSL -o "$DIR_VST3/$PLUGIN_FILE.vst3.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.vst3.zip"
+    curl -sfSL -m 20 -o "$DIR_CLAP/$PLUGIN_FILE.clap.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.clap.zip"
+    if [ $? -ne 0 ]; then
+        printf "\nCan't download the plugin :c"
+        printf "\nPlease check your connectivity and try again\n"
+        exit 1
+    fi
+    
+    curl -sfSL -m 20 -o "$DIR_VST3/$PLUGIN_FILE.vst3.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.vst3.zip"
+    if [ $? -ne 0 ]; then
+        printf "\nCan't download the plugin :c"
+        printf "\nPlease check your connectivity and try again\n"
+        exit 1
+    fi
 
     unzip -oqq -d "$DIR_CLAP/$PLUGIN_FILE.clap.temp" "$DIR_CLAP/$PLUGIN_FILE.clap.zip"
     rm -rf "$DIR_CLAP/$PLUGIN_FILE.clap"
