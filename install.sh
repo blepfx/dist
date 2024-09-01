@@ -5,7 +5,7 @@ spin() {
 }
 
 if [ "$(id -u)" -eq 0 ]; then
-    echo "please dont run me as root :c"
+    echo "Please don't run me as root :c"
     exit 1
 fi
 
@@ -75,7 +75,8 @@ elif [[ "$TARGET" == "macos" ]]; then
     rm -f "$DIR_VST3/$PLUGIN.vst3.zip"
     rmdir "$DIR_VST3/$PLUGIN.vst3.temp"
 else
-    echo "unknown os :c"
+    echo "Unknown OS, this installer only supports Linux and MacOS PCs :c"
+    exit 1
 fi
 
 kill $SPINNER >/dev/null 2>&1
