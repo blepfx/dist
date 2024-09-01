@@ -34,6 +34,11 @@ elif [[ "$OS" == *"Darwin"* ]]; then
     TARGET="macos"
 fi
 
+if [ "$PLUGIN" == "" ]; then
+    echo "No arguments specified :c"
+    exit 1
+fi
+
 echo -n "Installing $PLUGIN  "
 spin&
 SPINNER=$!
