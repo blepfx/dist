@@ -12,27 +12,26 @@ fi
 
 PLUGIN=$1
 OS="$(uname -a)"
-TARGET="unk"
-TARGET_ARCH="unk"
+TARGET="unknown"
 if [[ "$OS" == *"Linux"* ]]; then
     if [[ "$OS" == *"x86_64"* ]]; then
-        TARGET="linux"
-        TARGET_ARCH="x86_64"
+        TARGET="x86_64-unknown-linux-gnu"
     elif [[ "$OS" == *"x64"* ]]; then
-        TARGET="linux"
-        TARGET_ARCH="x86_64"
+        TARGET="x86_64-unknown-linux-gnu"
     elif [[ "$OS" == *"aarch64"* ]]; then
-        TARGET="linux"
-        TARGET_ARCH="aarch64"
+        TARGET="aarch64-unknown-linux-gnu"
     elif [[ "$OS" == *"arm64"* ]]; then
-        TARGET="linux"
-        TARGET_ARCH="aarch64"
+        TARGET="aarch64-unknown-linux-gnu"
     elif [[ "$OS" == *"armv8"* ]]; then
-        TARGET="linux"
-        TARGET_ARCH="aarch64"
+        TARGET="aarch64-unknown-linux-gnu"
     fi
 elif [[ "$OS" == *"Darwin"* ]]; then
-    TARGET="macos"
+    TARGET="apple-universal"
+fi
+
+if [ "$TARGET" == "unknown" ]; then
+    printf "\nUnknown OS, this installer only supports Linux and MacOS PCs :c\n"
+    exit 1
 fi
 
 if [ "$PLUGIN" == "" ]; then
@@ -44,74 +43,34 @@ printf "Installing $PLUGIN  "
 spin&
 SPINNER=$!
 
-if [[ "$TARGET" == "linux" ]]; then
+if [[ "$TARGET" == "aarch64-unknown-linux-gnu" || "$TARGET" == "x86_64-unknown-linux-gnu" ]]; then
     DIR_VST3="$HOME/.vst3/blepfx"
     DIR_CLAP="$HOME/.clap/blepfx"
-    PLUGIN_FILE="$PLUGIN-$TARGET_ARCH-unknown-linux-gnu"
-
-    mkdir -p "$DIR_CLAP"
-    mkdir -p "$DIR_VST3"
-
-    curl -sfL -m 20 -o "$DIR_CLAP/$PLUGIN_FILE.clap" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.clap"
-    if [ $? -ne 0 ]; then
-        kill $SPINNER >/dev/null 2>&1
-        printf "\nCan't download the plugin :c"
-        printf "\nPlease check your connectivity and try again\n"
-        exit 1
-    fi
-    
-    curl -sfL -m 20 -o "$DIR_VST3/$PLUGIN_FILE.vst3.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.vst3.zip"
-    if [ $? -ne 0 ]; then
-        kill $SPINNER >/dev/null 2>&1
-        printf "\nCan't download the plugin :c"
-        printf "\nPlease check your connectivity and try again\n"
-        exit 1
-    fi
-
-    unzip -oqq -d "$DIR_VST3/$PLUGIN_FILE.vst3.temp" "$DIR_VST3/$PLUGIN_FILE.vst3.zip"
-    rm -rf "$DIR_VST3/$PLUGIN_FILE.vst3"
-    mv "$DIR_VST3/$PLUGIN_FILE.vst3.temp/$PLUGIN_FILE.vst3" "$DIR_VST3/$PLUGIN_FILE.vst3"
-    rm -f "$DIR_VST3/$PLUGIN_FILE.vst3.zip"
-    rmdir "$DIR_VST3/$PLUGIN_FILE.vst3.temp"
-elif [[ "$TARGET" == "macos" ]]; then
+    DIR_TEMP="/tmp"
+elif [[ "$TARGET" == "apple-universal" ]]; then
     DIR_VST3="$HOME/Library/Audio/Plug-Ins/VST3/blepfx"
     DIR_CLAP="$HOME/Library/Audio/Plug-Ins/CLAP/blepfx"
-    PLUGIN_FILE="$PLUGIN-apple-universal"
+    DIR_TEMP="$TMPDIR"
+fi
 
-    mkdir -p "$DIR_CLAP"
-    mkdir -p "$DIR_VST3"
-
-    curl -sfL -m 20 -o "$DIR_CLAP/$PLUGIN_FILE.clap.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.clap.zip"
-    if [ $? -ne 0 ]; then
-        kill $SPINNER >/dev/null 2>&1
-        printf "\nCan't download the plugin :c"
-        printf "\nPlease check your connectivity and try again\n"
-        exit 1
-    fi
-    
-    curl -sfL -m 20 -o "$DIR_VST3/$PLUGIN_FILE.vst3.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN_FILE.vst3.zip"
-    if [ $? -ne 0 ]; then
-        kill $SPINNER >/dev/null 2>&1
-        printf "\nCan't download the plugin :c"
-        printf "\nPlease check your connectivity and try again\n"
-        exit 1
-    fi
-
-    unzip -oqq -d "$DIR_CLAP/$PLUGIN_FILE.clap.temp" "$DIR_CLAP/$PLUGIN_FILE.clap.zip"
-    rm -rf "$DIR_CLAP/$PLUGIN_FILE.clap"
-    mv "$DIR_CLAP/$PLUGIN_FILE.clap.temp/$PLUGIN_FILE.clap" "$DIR_CLAP/$PLUGIN_FILE.clap"
-    rm -f "$DIR_CLAP/$PLUGIN_FILE.clap.zip"
-    rmdir "$DIR_CLAP/$PLUGIN_FILE.clap.temp"
-
-    unzip -oqq -d "$DIR_VST3/$PLUGIN_FILE.vst3.temp" "$DIR_VST3/$PLUGIN_FILE.vst3.zip"
-    rm -rf "$DIR_VST3/$PLUGIN_FILE.vst3"
-    mv "$DIR_VST3/$PLUGIN_FILE.vst3.temp/$PLUGIN_FILE.vst3" "$DIR_VST3/$PLUGIN_FILE.vst3"
-    rm -f "$DIR_VST3/$PLUGIN_FILE.vst3.zip"
-    rmdir "$DIR_VST3/$PLUGIN_FILE.vst3.temp"
-else
-    printf "\nUnknown OS, this installer only supports Linux and MacOS PCs :c\n"
+curl -sfL -m 20 -o "$DIR_TEMP/$PLUGIN-$TARGET.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN-$TARGET.zip"
+if [ $? -ne 0 ]; then
+    kill $SPINNER >/dev/null 2>&1
+    printf "\nCan't download the plugin :c"
+    printf "\nPlease check your connectivity and try again\n"
     exit 1
 fi
+
+unzip -oqq -d "$DIR_TEMP/$PLUGIN-$TARGET" "$DIR_TEMP/$PLUGIN-$TARGET.zip"
+
+mkdir -p "$DIR_CLAP"
+mkdir -p "$DIR_VST3"
+
+mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.vst3" "$DIR_VST3/$PLUGIN.vst3"
+mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.clap" "$DIR_CLAP/$PLUGIN.clap"
+
+rm -d "$DIR_TEMP/$PLUGIN-$TARGET"
+rm "$DIR_TEMP/$PLUGIN-$TARGET.zip"
 
 kill $SPINNER >/dev/null 2>&1
 printf "\nDone! Thank you for using my plugins <3\n"
