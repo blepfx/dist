@@ -66,6 +66,9 @@ unzip -oqq -d "$DIR_TEMP/$PLUGIN-$TARGET" "$DIR_TEMP/$PLUGIN-$TARGET.zip"
 mkdir -p "$DIR_CLAP"
 mkdir -p "$DIR_VST3"
 
+rm -r "$DIR_VST3/$PLUGIN.vst3"
+rm -r "$DIR_CLAP/$PLUGIN.clap"
+
 mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.vst3" "$DIR_VST3/$PLUGIN.vst3"
 mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.clap" "$DIR_CLAP/$PLUGIN.clap"
 
