@@ -26,7 +26,14 @@ if [[ "$OS" == *"Linux"* ]]; then
         TARGET="aarch64-unknown-linux-gnu"
     fi
 elif [[ "$OS" == *"Darwin"* ]]; then
-    TARGET="apple-universal"
+    MACOS_VERSION="$(sw_vers -productVersion)"
+    MACOS_MAJOR="$(echo $MACOS_VERSION | cut -d'.' -f1)"
+    MACOS_MINOR="$(echo $MACOS_VERSION | cut -d'.' -f2)"
+    if [ "$MACOS_MAJOR" -gt 10 ] || { [ "$MACOS_MAJOR" -eq 10 ] && [ "$MACOS_MINOR" -gt 13 ]; }; then
+        TARGET="apple-universal"
+    else
+        TARGET="x86_64-apple-darwin"
+    fi
 fi
 
 if [ "$TARGET" == "unknown" ]; then
@@ -47,7 +54,7 @@ if [[ "$TARGET" == "aarch64-unknown-linux-gnu" || "$TARGET" == "x86_64-unknown-l
     DIR_VST3="$HOME/.vst3/blepfx"
     DIR_CLAP="$HOME/.clap/blepfx"
     DIR_TEMP="/tmp"
-elif [[ "$TARGET" == "apple-universal" ]]; then
+elif [[ "$TARGET" == "apple-universal" || "$TARGET" == "x86_64-apple-darwin" ]]; then
     DIR_VST3="$HOME/Library/Audio/Plug-Ins/VST3/blepfx"
     DIR_CLAP="$HOME/Library/Audio/Plug-Ins/CLAP/blepfx"
     DIR_TEMP="$TMPDIR"
