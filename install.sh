@@ -77,7 +77,7 @@ if [[ "$TARGET" == "universal2-apple-darwin" ]]; then
     rm -rf "$DIR_AUV2/blepfx-$PLUGIN-$TARGET.component"
     mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.component" "$DIR_AUV2/blepfx-$PLUGIN-$TARGET.component"
 
-    killall -9 AudioComponentRegistrar
+    killall -9 AudioComponentRegistrar &> /dev/null
 fi
 
 rm -d "$DIR_TEMP/$PLUGIN-$TARGET"
