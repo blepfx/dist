@@ -75,7 +75,7 @@ mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.vst3" "$DIR_VST3/$PLUGIN-$TARGET.v
 if [[ "$TARGET" == "universal2-apple-darwin" ]]; then
     mkdir -p "$DIR_AUV2"
     rm -rf "$DIR_AUV2/blepfx-$PLUGIN-$TARGET.component"
-    mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.component" "$DIR_VST3/$PLUGIN-$TARGET.component"
+    mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.component" "$DIR_AUV2/blepfx-$PLUGIN-$TARGET.component"
 
     killall -9 AudioComponentRegistrar
 fi
