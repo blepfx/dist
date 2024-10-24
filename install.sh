@@ -78,6 +78,10 @@ if [[ "$TARGET" == "universal2-apple-darwin" ]]; then
     mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.component" "$DIR_AUV2/blepfx-$PLUGIN-$TARGET.component"
 
     killall -9 AudioComponentRegistrar &> /dev/null
+
+    # remove old versions before the rename
+    rm -rf "$DIR_VST3/$PLUGIN-apple-universal.vst3" &> /dev/null
+    rm -rf "$DIR_CLAP/$PLUGIN-apple-universal.clap" &> /dev/null
 fi
 
 rm -d "$DIR_TEMP/$PLUGIN-$TARGET"
