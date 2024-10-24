@@ -50,7 +50,7 @@ if [[ "$TARGET" == "aarch64-unknown-linux-gnu" || "$TARGET" == "x86_64-unknown-l
 elif [[ "$TARGET" == "universal2-apple-darwin" ]]; then
     DIR_VST3="$HOME/Library/Audio/Plug-Ins/VST3/blepfx"
     DIR_CLAP="$HOME/Library/Audio/Plug-Ins/CLAP/blepfx"
-    DIR_AUV2="$HOME/Library/Audio/Plug-Ins/Components/blepfx"
+    DIR_AUV2="$HOME/Library/Audio/Plug-Ins/Components"
     DIR_TEMP="$TMPDIR"
 fi
 
