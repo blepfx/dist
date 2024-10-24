@@ -26,14 +26,7 @@ if [[ "$OS" == *"Linux"* ]]; then
         TARGET="aarch64-unknown-linux-gnu"
     fi
 elif [[ "$OS" == *"Darwin"* ]]; then
-    MACOS_VERSION="$(sw_vers -productVersion)"
-    MACOS_MAJOR="$(echo $MACOS_VERSION | cut -d'.' -f1)"
-    MACOS_MINOR="$(echo $MACOS_VERSION | cut -d'.' -f2)"
-    if [ "$MACOS_MAJOR" -gt 10 ] || { [ "$MACOS_MAJOR" -eq 10 ] && [ "$MACOS_MINOR" -gt 13 ]; }; then
-        TARGET="apple-universal"
-    else
-        TARGET="x86_64-apple-darwin"
-    fi
+    TARGET="universal2-apple-darwin"
 fi
 
 if [ "$TARGET" == "unknown" ]; then
@@ -54,9 +47,10 @@ if [[ "$TARGET" == "aarch64-unknown-linux-gnu" || "$TARGET" == "x86_64-unknown-l
     DIR_VST3="$HOME/.vst3/blepfx"
     DIR_CLAP="$HOME/.clap/blepfx"
     DIR_TEMP="/tmp"
-elif [[ "$TARGET" == "apple-universal" || "$TARGET" == "x86_64-apple-darwin" ]]; then
+elif [[ "$TARGET" == "universal2-apple-darwin" ]]; then
     DIR_VST3="$HOME/Library/Audio/Plug-Ins/VST3/blepfx"
     DIR_CLAP="$HOME/Library/Audio/Plug-Ins/CLAP/blepfx"
+    DIR_AUV2="$HOME/Library/Audio/Plug-Ins/Components/blepfx"
     DIR_TEMP="$TMPDIR"
 fi
 
@@ -71,13 +65,18 @@ fi
 unzip -oqq -d "$DIR_TEMP/$PLUGIN-$TARGET" "$DIR_TEMP/$PLUGIN-$TARGET.zip"
 
 mkdir -p "$DIR_CLAP"
-mkdir -p "$DIR_VST3"
-
-rm -rf "$DIR_VST3/$PLUGIN-$TARGET.vst3"
 rm -rf "$DIR_CLAP/$PLUGIN-$TARGET.clap"
-
-mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.vst3" "$DIR_VST3/$PLUGIN-$TARGET.vst3"
 mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.clap" "$DIR_CLAP/$PLUGIN-$TARGET.clap"
+
+mkdir -p "$DIR_VST3"
+rm -rf "$DIR_VST3/$PLUGIN-$TARGET.vst3"
+mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.vst3" "$DIR_VST3/$PLUGIN-$TARGET.vst3"
+
+if [[ "$TARGET" == "universal2-apple-darwin" ]]; then
+    mkdir -p "$DIR_AUV2"
+    rm -rf "$DIR_AUV2/blepfx-$PLUGIN-$TARGET.component"
+    mv "$DIR_TEMP/$PLUGIN-$TARGET/$PLUGIN-$TARGET.component" "$DIR_VST3/$PLUGIN-$TARGET.component"
+fi
 
 rm -d "$DIR_TEMP/$PLUGIN-$TARGET"
 rm "$DIR_TEMP/$PLUGIN-$TARGET.zip"
