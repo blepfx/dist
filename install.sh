@@ -54,7 +54,7 @@ elif [[ "$TARGET" == "universal2-apple-darwin" ]]; then
     DIR_TEMP="$TMPDIR"
 fi
 
-curl -sfL -m 20 -o "$DIR_TEMP/$PLUGIN-$TARGET.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN-$TARGET.zip"
+curl -sfL -m 40 -o "$DIR_TEMP/$PLUGIN-$TARGET.zip" "https://github.com/blepfx/dist/releases/latest/download/$PLUGIN-$TARGET.zip"
 if [ $? -ne 0 ]; then
     kill $SPINNER >/dev/null 2>&1
     printf "\nCan't download the plugin :c"
